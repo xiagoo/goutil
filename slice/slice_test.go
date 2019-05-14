@@ -29,3 +29,21 @@ func Test_InArray(t *testing.T) {
 	}
 	t.Log(flag)
 }
+
+func Test_ArrayMerge(t *testing.T) {
+	sliceString := []string{"1", "2", "3"}
+	othersString := []string{"1", "2", "3"}
+	s, err := ArrayMerge(sliceString, othersString)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(s)
+
+	sliceInt := []int{1, 2, 3}
+	othersInt := []int{3, 4, 5}
+	s, err = ArrayMerge(sliceInt, othersInt)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(s.([]int))
+}

@@ -89,3 +89,20 @@ func ConvMapIntf2MapStr(source map[string]interface{}) map[string]string {
 	}
 	return target
 }
+
+//ConvSlice2StrSlice ...
+func ConvSlice2StrSlice(source interface{}) []string {
+	target := []string{}
+	st := reflect.TypeOf(source)
+	sv := reflect.ValueOf(source)
+	if st.Kind() == reflect.Ptr {
+		st = st.Elem()
+		sv = sv.Elem()
+	}
+	if st.Kind() == reflect.Slice {
+		for i := 0; i < sv.Len(); i++ {
+			target = append(target, ConvIntf2Str(sv.Index(i)))
+		}
+	}
+	return target
+}

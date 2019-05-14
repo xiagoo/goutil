@@ -3,6 +3,8 @@ package slice
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/xiagoo/goutil/convert"
 )
 
 //InArray haystack need slice or array, needle.kind should be int,float,string
@@ -30,4 +32,45 @@ func InArray(needle interface{}, haystack interface{}) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func ArrayMerge(slice interface{}, others ...interface{}) (interface{}, error) {
+	st := reflect.TypeOf(slice)
+	sv := reflect.ValueOf(slice)
+	ot := reflect.TypeOf(others)
+	ov := reflect.ValueOf(others)
+	if ot.Kind() == reflect.Ptr {
+		ot = ot.Elem()
+		ov = ov.Elem()
+	}
+	if ot.Kind() != reflect.Slice {
+		return nil, fmt.Errorf("others type should be slice, others:%s", ot.Kind().String())
+	}
+	if st.Kind() == reflect.Ptr {
+		st = st.Elem()
+		sv = sv.Elem()
+	}
+	if sv.Kind() != reflect.Slice {
+		return nil, fmt.Errorf("slice type should be slice, slice:%s", st.Kind().String())
+	}
+
+	if st.Kind() != ot.Kind() {
+		return nil, fmt.Errorf("slice type and others type should be same, slice:%s, others:%s", ot.Kind().String(), st.Kind().String())
+	}
+
+	for i := 0; i < ov.Len(); i++ {
+		sv = reflect.AppendSlice(
+			sv,
+			ov.Index(i).Elem(),
+		)
+	}
+	rv := reflect.New(sv.Type()).Elem()
+	tmp := make(map[string]reflect.Value)
+	for i := 0; i < sv.Len(); i++ {
+		tmp[convert.ConvIntf2Str(sv.Index(i))] = sv.Index(i)
+	}
+	for _, v := range tmp {
+		rv = reflect.Append(rv, v)
+	}
+	return rv, nil
 }

@@ -1,6 +1,7 @@
 package convert
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -25,4 +26,10 @@ func Test_ConvMapIntf2MapStr(t *testing.T) {
 		"name": "lily",
 		"age":  20,
 	}))
+}
+
+func Test_ConvSlice2StrSlice(t *testing.T) {
+	fmt.Printf("%#v\n", ConvSlice2StrSlice([]string{"1", "3", "4"}))
+	fmt.Printf("%#v\n", ConvSlice2StrSlice([]int{1, 3, 4}))
+	fmt.Printf("%#v\n", ConvSlice2StrSlice([]float64{1.1, 3.0, 4.0}))
 }
