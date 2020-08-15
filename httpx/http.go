@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -114,6 +115,7 @@ func (agent *Agent) GetResponse(callback func(resp *http.Response, err error)) (
 	return agent.client.Do(req)
 }
 func (agent *Agent) GetResponseBody(callback func(resp *http.Response, err error)) ([]byte, error) {
+	start := time.Now()
 	req, err := agent.getRequest(agent.data)
 	if err != nil {
 		return nil, err
@@ -126,5 +128,6 @@ func (agent *Agent) GetResponseBody(callback func(resp *http.Response, err error
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("url:%s method:%s req:%s resp:%s cost:%s\n", req.RequestURI, req.Method, req.URL.RawQuery, string(body), time.Now().Sub(start))
 	return body, nil
 }

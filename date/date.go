@@ -1,5 +1,27 @@
 package date
 
+import (
+	"log"
+	"time"
+)
+
+const (
+	YMDHMS = "2006-01-02 15:04:05"
+	YMDHM  = "2006-01-02 15:04"
+	YMDH   = "2006-01-02 15"
+	YMD    = "2006-01-02"
+	YM     = "2006-01"
+	MD     = "01-02"
+	Y      = "2006"
+	M      = "01"
+	D      = "02"
+	HMS    = "15:04:05"
+	HM     = "15:04"
+	MS     = "04:05"
+	H      = "15"
+	S      = "05"
+)
+
 func GetConstellation(month, day int) (star string) {
 	if month <= 0 || month >= 13 {
 		star = "-1"
@@ -89,4 +111,76 @@ func GetZodiac(year int) (zodiac string) {
 		zodiac = "猪"
 	}
 	return
+}
+
+func Stamp2S(layout string, stamp int) string {
+	return time.Unix(int64(stamp), 0).Format(layout)
+}
+
+func S2Stamp(layout string, s string) int {
+	t, err := time.ParseInLocation(layout, s, time.Local)
+	if err != nil {
+		log.Printf("S2Stamp:%s\n", err.Error())
+		return 0
+	}
+	return int(t.Unix())
+}
+
+func S2Time(layout string, s string) *time.Time {
+	t, err := time.ParseInLocation(layout, s, time.Local)
+	if err != nil {
+		log.Printf("S2Time:%s\n", err.Error())
+		return nil
+	}
+	return &t
+}
+
+func Time2S(layout string, t time.Time) string {
+	return t.Format(layout)
+}
+
+func Stamp2Time(stamp int) time.Time {
+	return time.Unix(int64(stamp), 0)
+}
+
+func Time2Stamp(t time.Time) int {
+	return int(t.Unix())
+}
+
+func Today0Clock() int {
+	return Get0Clock(0)
+}
+
+func Get0Clock(d int) int {
+	s := time.Now().Format(YMD)
+	t, err := time.ParseInLocation(YMD, s, time.Local)
+	if err != nil {
+		log.Printf("Get0Clock:%s\n", err.Error())
+		return 0
+	}
+	return int(t.AddDate(0, 0, d).Unix())
+}
+
+func AddSecond(s int) time.Time {
+	return time.Now().Add(time.Second * time.Duration(s))
+}
+
+func AddMinute(m int) time.Time {
+	return time.Now().Add(time.Minute * time.Duration(m))
+}
+
+func AddHour(h int) time.Time {
+	return time.Now().Add(time.Hour * time.Duration(h))
+}
+
+func AddDay(d int) time.Time {
+	return time.Now().AddDate(0, 0, d)
+}
+
+func AddMonth(m int) time.Time {
+	return time.Now().AddDate(0, m, 0)
+}
+
+func AddYear(y int) time.Time {
+	return time.Now().AddDate(y, 0, 0)
 }
