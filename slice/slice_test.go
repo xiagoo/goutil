@@ -45,5 +45,6 @@ func Test_ArrayMerge(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
 	t.Log(s.([]int))
 }
